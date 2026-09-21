@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@300;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── MedSci V5 Base Styles ── */
+@layer base {
+    :root {
+        --navy:      #3A115E;
+        --teal:      #8D38C9;
+        --gold:      #C4996C;
+        --gold-light:#DDBF9A;
+        --white:     #FFFFFF;
+        --off:       #F7F8FA;
+        --text:      #1A1A2E;
+        --muted:     #4B5563;
+        --border:    #E5E7EB;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        font-size: 125%; /* Increases all REM-based font sizes by 25% (Base: 20px) */
+    }
+
+    body {
+        font-family: 'Sarabun', sans-serif;
+        color: var(--text);
+        background: var(--white);
+        font-size: 1rem;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+
+    h1, h2, h3, .font-prompt {
+        font-family: 'Prompt', sans-serif;
+    }
+}
+
+/* ── MedSci Components ── */
+@layer components {
+    /* Buttons */
+    .btn-primary {
+        @apply bg-gold text-navy font-bold px-7 py-3 rounded-lg inline-block
+               transition-all duration-200 hover:-translate-y-0.5 hover:shadow-gold
+               text-[15px];
+    }
+
+    .btn-outline-white {
+        @apply border-2 border-white/40 text-white font-medium px-7 py-3 rounded-lg
+               inline-block transition-all duration-200 hover:border-white hover:bg-white/10
+               text-[15px];
+    }
+
+    .btn-admin {
+        @apply bg-teal text-white font-semibold px-5 py-2 rounded-lg
+               transition-all duration-200 hover:bg-teal-dark text-sm;
+    }
+
+    /* Cards */
+    .card {
+        @apply bg-white rounded-2xl shadow-card transition-all duration-200;
+    }
+
+    .card-hover {
+        @apply hover:-translate-y-1 hover:shadow-card-hover;
+    }
+
+    /* Section */
+    .section-eyebrow {
+        @apply text-xs font-bold tracking-[3px] uppercase text-teal mb-2;
+    }
+
+    .section-title {
+        @apply font-prompt text-[clamp(22px,3vw,32px)] font-bold text-navy leading-snug;
+    }
+
+    .gold-line {
+        @apply w-12 h-1 bg-gold rounded mt-3;
+    }
+
+    /* Navigation */
+    .nav-link {
+        @apply px-3.5 py-2 text-sm font-medium text-[#1A1A2E] rounded-lg
+               transition-all duration-200 hover:bg-off hover:text-teal;
+    }
+
+    .nav-link-active {
+        @apply text-teal font-semibold;
+    }
+
+    /* Badges/Tags */
+    .badge {
+        @apply inline-block text-[11px] font-bold tracking-wide uppercase
+               px-2.5 py-0.5 rounded;
+    }
+
+    .badge-teal   { @apply bg-teal/10 text-teal; }
+    .badge-gold   { @apply bg-gold/20 text-[#8B6914]; }
+    .badge-navy   { @apply bg-navy/10 text-navy; }
+    .badge-green  { @apply bg-green-100 text-green-700; }
+    .badge-red    { @apply bg-red-100 text-red-700; }
+    .badge-amber  { @apply bg-amber-100 text-amber-700; }
+
+    /* Form elements */
+    .form-input {
+        @apply w-full border border-border-gray rounded-lg px-4 py-2.5 text-sm
+               focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal
+               transition-colors duration-150;
+    }
+
+    .form-label {
+        @apply block text-sm font-semibold text-navy mb-1.5;
+    }
+
+    .form-select {
+        @apply form-input bg-white cursor-pointer;
+    }
+
+    /* Admin sidebar */
+    .admin-nav-item {
+        @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium
+               text-white/70 transition-all duration-200
+               hover:bg-white/10 hover:text-white;
+    }
+
+    .admin-nav-item-active {
+        @apply bg-white/15 text-white;
+    }
+}
+
+/* ── Utilities ── */
+@layer utilities {
+    .text-balance { text-wrap: balance; }
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .glass {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+}

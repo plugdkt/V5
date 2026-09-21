@@ -1,0 +1,56 @@
+---
+# Semgrep configuration for MedSci V5
+# Runs OWASP + security-audit packs and a few project-specific rules
+--
+# Exclude vendor, node_modules, storage, and build artifacts
+exclude:
+  - vendor/**
+  - nodejs/**
+  - node_modules/**
+  - storage/**
+  - public/build/**
+
+rules:
+  - include: p/owasp-top-ten
+  - include: p/security-audit
+
+  # Detect likely hardcoded AWS access keys
+  - id: hardcoded-aws-access-key
+    patterns:
+      - pattern: $VAR = "$KEY"
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: "AKIA[0-9A-Z]{16}"
+    message: Possible hardcoded AWS access key
+    languages: [php, javascript, python]
+    severity: ERROR
+
+  # Detect likely hardcoded long secrets (API keys, client secrets)
+  - id: hardcoded-long-secret
+    patterns:
+      - pattern: $VAR = "$SECRET"
+      - metavariable-regex:
+          metavariable: $SECRET
+          regex: "[A-Za-z0-9_\-]{20,}"
+    message: Possible hardcoded secret or API key (string length >= 20)
+    languages: [php, javascript, python]
+    severity: WARNING
+
+  # Detect use of env(...) with inline secrets or defaults that look like secrets
+  - id: env-default-secret
+    pattern: env($KEY, $VALUE)
+    metavariable-regex:
+      metavariable: $VALUE
+      regex: "['\"]?[A-Za-z0-9_\-]{20,}['\"]?"
+    message: env() with default value that looks like a secret — move to .env
+    languages: [php]
+    severity: WARNING
+
+  # Discourage disabling SSL verification in code
+  - id: disable-ssl-verification
+    pattern-either:
+      - pattern: Http::withoutVerifying()->...
+      - pattern: ->withoutVerifying()
+    message: Disabling SSL verification is insecure; use env flag only in testing
+    languages: [php]
+    severity: HIGH
