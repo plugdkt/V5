@@ -47,4 +47,15 @@ class MenuItem extends Model
         }
         return url($value);
     }
+
+    /**
+     * Localized menu title (returns English if current locale is 'en' and title_en exists).
+     */
+    public function getTitleAttribute()
+    {
+        if (app()->getLocale() === 'en' && !empty($this->title_en)) {
+            return $this->title_en;
+        }
+        return $this->title_th;
+    }
 }

@@ -1,5 +1,29 @@
 <x-public-layout>
-    <x-slot name="title">หลักสูตรการศึกษา</x-slot>
+    <x-slot name="title">{{ __('featured_programs') }}</x-slot>
+    <x-slot name="description">{{ app()->getLocale() === 'en' ? 'Undergraduate programs at the School of Medical Sciences, University of Phayao: Microbiology, Biochemistry, Nutrition and Dietetics.' : 'หลักสูตรระดับปริญญาตรี คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา: สาขาจุลชีววิทยา, ชีวเคมีและชีววิทยาโมเลกุล, โภชนาการและการกำหนดอาหาร' }}</x-slot>
+
+    @push('head')
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "{{ app()->getLocale() === 'en' ? 'Home' : 'หน้าแรก' }}",
+          "item": "{{ route('home') }}"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "{{ __('featured_programs') }}",
+          "item": "{{ route('programs') }}"
+        }
+      ]
+    }
+    </script>
+    @endpush
 
     <div class="bg-navy py-12 text-white relative overflow-hidden">
         <div class="max-w-[1200px] mx-auto px-6 relative z-10">

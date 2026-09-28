@@ -1,5 +1,6 @@
 <x-public-layout>
-    <x-slot name="title">สำหรับผู้สนใจศึกษาต่อ</x-slot>
+    <x-slot name="title">{{ __('admissions') }}</x-slot>
+    <x-slot name="description">{{ __('admission_faq_subtitle') }}</x-slot>
 
     <!-- ── HERO SECTION ── -->
     <div class="relative text-white py-12 overflow-hidden" style="background-color: #1E0730;">
@@ -213,6 +214,47 @@
             </div>
         </div>
     </section>
+
+    {{-- ── ADMISSION FAQ ACCORDION & AEO ── --}}
+    @php
+        $admissionFaqs = [
+            [
+                'q_th' => 'แผนการเรียนที่ไม่ใช่วิทย์-คณิต หรือผู้จบการศึกษานอกระบบ (กศน. / ปวช.) สามารถสมัครได้หรือไม่?',
+                'q_en' => 'Can students from Non-Science backgrounds, GED, or Vocational certificates apply?',
+                'a_th' => "หลักสูตรระดับปริญญาตรีของคณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา กำหนดคุณสมบัติผู้สมัครสำเร็จการศึกษาชั้นมัธยมศึกษาปีที่ 6 ในแผนการเรียนวิทยาศาสตร์-คณิตศาสตร์ (วิทย์-คณิต) เป็นหลักตามเกณฑ์มาตรฐานของสภาวิชาชีพ\nสำหรับรอบเฉพาะที่เปิดรับเทียบเท่า โปรดตรวจสอบประกาศระเบียบการรับสมัครของมหาวิทยาลัยพะเยาในแต่ละปีการศึกษา",
+                'a_en' => "Undergraduate programs at the School of Medical Sciences primarily require completion of High School (Mathayom 6) in the Science-Mathematics track in accordance with professional standard requirements. For specific admission pathways or equivalent credentials, please refer to the annual University of Phayao admission announcement.",
+            ],
+            [
+                'q_th' => 'การสมัครรอบที่ 1 Portfolio ต้องเตรียมผลงานด้านใดเพื่อเพิ่มโอกาสผ่านการคัดเลือก?',
+                'q_en' => 'What should be included in the TCAS Round 1 Portfolio to increase chances of acceptance?',
+                'a_th' => "พอร์ตโฟลิโอควรเน้นผลงานหรือกิจกรรมที่เกี่ยวข้องกับวิทยาศาสตร์ การแพทย์ หรือชีววิทยา เช่น:\n• โครงงานวิทยาศาสตร์ การแข่งขันตอบปัญหา หรือการเข้าร่วมค่ายวิทยาศาสตร์การแพทย์\n• กิจกรรมจิตอาสาและทักษะการทำงานร่วมกับผู้อื่น\n• ใบประกาศนียบัตรที่สะท้อนความสนใจอย่างแท้จริงในสาขาวิชาที่เลือกสมัคร",
+                'a_en' => "Portfolios should highlight scientific, medical, or biological passion and activities:\n• Science fair projects, academic competitions, or medical science summer camp participation\n• Volunteer experiences and community outreach\n• Certificates and reflections demonstrating genuine passion for the chosen program",
+            ],
+            [
+                'q_th' => 'โควตาภาคเหนือ (TCAS รอบที่ 2) ครอบคลุมจังหวัดใดบ้าง?',
+                'q_en' => 'Which provinces are eligible for the Northern Region Quota (TCAS Round 2)?',
+                'a_th' => "โควตาภาคเหนือ มหาวิทยาลัยพะเยา ครอบคลุมผู้เรียนในสถานศึกษาเขต 17 จังหวัดภาคเหนือ ได้แก่ พะเยา, เชียงใหม่, เชียงราย, ลำปาง, ลำพูน, แพร่, น่าน, แม่ฮ่องสอน, อุตรดิตถ์, พิษณุโลก, สุโขทัย, ตาก, กำแพงเพชร, พิจิตร, นครสวรรค์, อุทัยธานี และเพชรบูรณ์",
+                'a_en' => "The Northern Region Quota covers students attending schools in the 17 Northern provinces of Thailand, including Phayao, Chiang Mai, Chiang Rai, Lampang, Lamphun, Phrae, Nan, Mae Hong Son, Uttaradit, Phitsanulok, Sukhothai, Tak, Kamphaeng Phet, Phichit, Nakhon Sawan, Uthai Thani, and Phetchabun.",
+            ],
+            [
+                'q_th' => 'มีการสอบสัมภาษณ์หรือไม่ และจัดสอบในรูปแบบใด?',
+                'q_en' => 'Is there an admission interview and what format is used?',
+                'a_th' => "คณะวิทยาศาสตร์การแพทย์มีการจัดสอบสัมภาษณ์เพื่อประเมินทัศนคติ ความพร้อม และความตั้งใจในการศึกษาต่อ โดยส่วนใหญ่ในรอบ Portfolio และ Quota จะจัดสอบสัมภาษณ์แบบออนไลน์ (Online Interview) หรือตามประกาศกำหนดการของงานรับเข้าศึกษาในรอบนั้นๆ",
+                'a_en' => "Interviews are conducted to evaluate attitude, academic readiness, and motivation. For most Portfolio and Quota rounds, interviews are held via Online Interview platforms as specified in the official schedule.",
+            ],
+            [
+                'q_th' => 'เมื่อผ่านการคัดเลือกแล้ว ต้องดำเนินการยืนยันสิทธิ์อย่างไร?',
+                'q_en' => 'After passing selection, what are the steps to confirm enrollment?',
+                'a_th' => "ผู้ผ่านการคัดเลือกจะต้องดำเนินการยืนยันสิทธิ์ในระบบ myTCAS ของ ทปอ. (https://student.mytcas.com) ตามวันและเวลาที่กำหนดในปฏิทิน TCAS ประจำปี จากนั้นจึงทำรายการขึ้นทะเบียนเป็นนิสิตใหม่และชำระเงินค่าธรรมเนียมการศึกษาของมหาวิทยาลัยพะเยา",
+                'a_en' => "Selected candidates must confirm their choice on the national myTCAS portal (https://student.mytcas.com) according to the CUPT national calendar, then complete university registration and fee payment on the University of Phayao portal.",
+            ],
+        ];
+    @endphp
+
+    <x-faq-accordion :items="$admissionFaqs" 
+                     :title="__('admission_faq_title')" 
+                     :subtitle="__('admission_faq_subtitle')" 
+                     tag="TCAS FAQ" />
 
     <!-- ── CONTACT ADMISSIONS ── -->
     <section class="bg-gray-50 py-16">

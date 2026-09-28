@@ -323,11 +323,11 @@
         <div class="max-w-[1200px] mx-auto px-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
                 <div>
-                    <div class="section-eyebrow">หลักสูตรที่เปิดสอน</div>
-                    <h2 class="section-title">เลือกเส้นทางของคุณ</h2>
+                    <div class="section-eyebrow">{{ __('featured_programs') }}</div>
+                    <h2 class="section-title">{{ app()->getLocale() === 'en' ? 'Choose Your Academic Path' : 'เลือกเส้นทางของคุณ' }}</h2>
                     <div class="gold-line"></div>
                 </div>
-                <a href="{{ route('programs') }}" class="text-sm font-semibold text-teal hover:underline whitespace-nowrap">ข้อมูลหลักสูตรทั้งหมด →</a>
+                <a href="{{ route('programs') }}" class="text-sm font-semibold text-teal hover:underline whitespace-nowrap">{{ app()->getLocale() === 'en' ? 'View All Programs →' : 'ข้อมูลหลักสูตรทั้งหมด →' }}</a>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -349,7 +349,7 @@
                             <div class="absolute top-5 right-5 w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-2xl">{{ $icon }}</div>
                             <div class="text-[10px] text-white/70 tracking-wider uppercase font-bold">{{ $program->degree_abbr_en }}</div>
                             <h3 class="font-prompt text-base font-bold leading-snug">
-                                {{ str_starts_with($program->title_th, 'หลักสูตร') ? str_replace('หลักสูตร', '', $program->title_th) : $program->title_th }}
+                                {{ (app()->getLocale() === 'en' && $program->title_en) ? $program->title_en : (str_starts_with($program->title_th, 'หลักสูตร') ? str_replace('หลักสูตร', '', $program->title_th) : $program->title_th) }}
                             </h3>
                         </div>
                         <div class="p-5 flex-grow flex flex-col justify-between">
@@ -357,8 +357,8 @@
                                 {{ $program->overview }}
                             </p>
                             <div class="flex gap-4 border-t border-border-gray pt-4 text-xs text-navy">
-                                <span>⏱ <strong>{{ $program->duration_years ?? 4 }} ปี</strong></span>
-                                <span>📚 <strong>{{ $program->credits }}</strong> หน่วยกิต</span>
+                                <span>⏱ <strong>{{ $program->duration_years ?? 4 }} {{ app()->getLocale() === 'en' ? 'Years' : 'ปี' }}</strong></span>
+                                <span>📚 <strong>{{ $program->credits }}</strong> {{ app()->getLocale() === 'en' ? 'Credits' : 'หน่วยกิต' }}</span>
                             </div>
                         </div>
                     </a>
@@ -372,8 +372,8 @@
         <div class="max-w-[1200px] mx-auto px-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
                 <div>
-                    <div class="section-eyebrow">ข่าวสารล่าสุด</div>
-                    <h2 class="section-title">ความเคลื่อนไหวของคณะ</h2>
+                    <div class="section-eyebrow">{{ __('latest_news') }}</div>
+                    <h2 class="section-title">{{ app()->getLocale() === 'en' ? 'Faculty Updates & Highlights' : 'ความเคลื่อนไหวของคณะ' }}</h2>
                     <div class="gold-line"></div>
                 </div>
             </div>
@@ -622,5 +622,49 @@
             </div>
         </div>
     </section>
+
+    {{-- ── FREQUENTLY ASKED QUESTIONS (FAQ & AEO) ── --}}
+    @php
+        $homeFaqs = [
+            [
+                'q_th' => 'คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา เปิดสอนหลักสูตรระดับปริญญาตรีสาขาใดบ้าง?',
+                'q_en' => 'What undergraduate programs are offered by the School of Medical Sciences, University of Phayao?',
+                'a_th' => "คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา เปิดสอนหลักสูตรระดับปริญญาตรี (วท.บ. 4 ปี) ทั้งหมด 3 หลักสูตร ได้แก่:\n1. สาขาวิชาจุลชีววิทยา (Microbiology)\n2. สาขาวิชาชีวเคมีและชีววิทยาโมเลกุล (Biochemistry and Molecular Biology)\n3. สาขาวิชาโภชนาการและการกำหนดอาหาร (Nutrition and Dietetics)",
+                'a_en' => "The School of Medical Sciences offers 3 Bachelor of Science (B.Sc. 4-year) undergraduate programs:\n1. Bachelor of Science in Microbiology\n2. Bachelor of Science in Biochemistry and Molecular Biology\n3. Bachelor of Science in Nutrition and Dietetics",
+            ],
+            [
+                'q_th' => 'การรับสมัครเข้าศึกษาต่อ (TCAS) มีรอบใดบ้าง และสมัครได้อย่างไร?',
+                'q_en' => 'What are the admission rounds (TCAS) and how do I apply?',
+                'a_th' => "การรับสมัครเข้าศึกษาต่อระดับปริญญาตรีดำเนินการผ่านระบบ TCAS ของมหาวิทยาลัยพะเยา แบ่งเป็น 4 รอบหลัก:\n• รอบที่ 1 Portfolio (แฟ้มสะสมผลงาน)\n• รอบที่ 2 Quota (โควตาพื้นที่ภาคเหนือ และโควตาพิเศษ)\n• รอบที่ 3 Admission (การคัดเลือกผ่านระบบกลาง ทปอ.)\n• รอบที่ 4 Direct Admission (รับตรงอิสระ)\nผู้สนใจสามารถดูเกณฑ์คุณสมบัติและสมัครออนไลน์ได้ที่ https://admission.up.ac.th",
+                'a_en' => "Admissions are conducted through the national TCAS system across 4 main rounds:\n• Round 1: Portfolio\n• Round 2: Quota (Northern Region & Special Quotas)\n• Round 3: Admission (Central CUPT system)\n• Round 4: Direct Admission\nApplicants can check criteria and apply online via https://admission.up.ac.th",
+            ],
+            [
+                'q_th' => 'อัตราค่าธรรมเนียมการศึกษา (ค่าเทอม) แต่ละหลักสูตรประมาณเท่าไหร่?',
+                'q_en' => 'What is the tuition fee structure for undergraduate programs?',
+                'a_th' => "ค่าธรรมเนียมการศึกษาเป็นระบบเหมาจ่ายตามประกาศของมหาวิทยาลัยพะเยา:\n• สาขาวิชาจุลชีววิทยา: 16,000 บาท / ภาคการศึกษา\n• สาขาวิชาชีวเคมีและชีววิทยาโมเลกุล: 16,000 บาท / ภาคการศึกษา\n• สาขาวิชาโภชนาการและการกำหนดอาหาร: 19,000 บาท / ภาคการศึกษา",
+                'a_en' => "Tuition fees are charged as a flat rate per semester according to University of Phayao regulations:\n• B.Sc. in Microbiology: 16,000 THB / semester\n• B.Sc. in Biochemistry and Molecular Biology: 16,000 THB / semester\n• B.Sc. in Nutrition and Dietetics: 19,000 THB / semester",
+            ],
+            [
+                'q_th' => 'สำเร็จการศึกษาจากคณะวิทยาศาสตร์การแพทย์ สามารถประกอบอาชีพใดได้บ้าง?',
+                'q_en' => 'What career opportunities are available after graduation?',
+                'a_th' => "บัณฑิตสามารถทำงานได้ทั้งในหน่วยงานภาครัฐ เอกชน โรงพยาบาล และสถาบันวิจัย เช่น:\n• นักวิทยาศาสตร์การแพทย์ / นักวิจัยในห้องปฏิบัติการและศูนย์วิทยาศาสตร์การแพทย์\n• นักจุลชีววิทยา / ผู้ควบคุมคุณภาพในอุตสาหกรรมอาหาร ยา และเครื่องสำอาง (QC/QA)\n• นักกำหนดอาหารวิชาชีพ / นักโภชนาการในโรงพยาบาลและศูนย์สุขภาพ\n• ผู้เชี่ยวชาญผลิตภัณฑ์ทางการแพทย์ เครื่องมือแพทย์ และเวชภัณฑ์ (Product Specialist)",
+                'a_en' => "Graduates have wide career pathways in government agencies, hospitals, private industry, and research institutes:\n• Medical Scientists / Laboratory Researchers in medical centers\n• Microbiologists / Quality Control & Quality Assurance (QC/QA) Officers\n• Certified Dietitians / Professional Nutritionists\n• Medical and Scientific Product Specialists / Technical Advisors",
+            ],
+            [
+                'q_th' => 'มีทุนการศึกษาหรือสวัสดิการสำหรับนิสิตหรือไม่?',
+                'q_en' => 'Are there scholarships and financial aid available for students?',
+                'a_th' => "มหาวิทยาลัยพะเยาและคณะวิทยาศาสตร์การแพทย์มีทุนการศึกษาหลายประเภท ได้แก่ ทุนผู้ขาดแคลนทุนทรัพย์, ทุนเรียนดี, กองทุนเงินให้กู้ยืมเพื่อการศึกษา (กยศ./กรอ.) และทุนผู้ช่วยวิจัยสำหรับนิสิต",
+                'a_en' => "Yes, various financial support options are available including need-based scholarships, academic excellence awards, Student Loan Funds (กยศ./กรอ.), and student research grants.",
+            ],
+            [
+                'q_th' => 'คณะวิทยาศาสตร์การแพทย์ตั้งอยู่ที่ใด และเดินทางอย่างไร?',
+                'q_en' => 'Where is the School of Medical Sciences located and how can I visit?',
+                'a_th' => "คณะวิทยาศาสตร์การแพทย์ ตั้งอยู่ภายในมหาวิทยาลัยพะเยา เลขที่ 19 หมู่ 2 ต.แม่กา อ.เมือง จ.พะเยา 56000 เดินทางสะดวกด้วยรถโดยสารประจำทางลงหน้ามหาวิทยาลัย และมีรถเมล์ไฟฟ้าสวัสดิการ (EV Bus) บริการรับ-ส่งทั่วมหาวิทยาลัยฟรี",
+                'a_en' => "The School of Medical Sciences is located at the University of Phayao, 19 Moo 2, Mae Ka, Mueang Phayao 56000, Thailand. Conveniently reachable by bus, with complimentary campus electric shuttle buses (EV Bus) available throughout the campus.",
+            ],
+        ];
+    @endphp
+
+    <x-faq-accordion :items="$homeFaqs" />
 </x-public-layout>
 

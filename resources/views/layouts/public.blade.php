@@ -1,11 +1,32 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{ $description ?? 'คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา มุ่งผลิตบัณฑิตที่มีความสามารถ มีจริยธรรม และพร้อมรับมือกับการเปลี่ยนแปลงในยุคดิจิทัล' }}">
+    <meta name="description" content="{{ $description ?? __('faculty_full_name') }}">
+    <meta name="keywords" content="{{ $keywords ?? __('meta_keywords') }}">
     <meta name="robots" content="INDEX, FOLLOW">
-    <title>{{ isset($title) ? $title . ' | ' : '' }}คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา</title>
+    <link rel="canonical" href="{{ url()->current() }}">
+    <title>{{ isset($title) ? $title . ' | ' : '' }}{{ __('faculty_full_name') }}</title>
+
+    {{-- Open Graph / Facebook / LINE --}}
+    <meta property="og:site_name" content="{{ __('faculty_full_name') }}">
+    <meta property="og:type" content="{{ $ogType ?? 'website' }}">
+    <meta property="og:title" content="{{ isset($title) ? $title . ' | ' : '' }}{{ __('faculty_full_name') }}">
+    <meta property="og:description" content="{{ $description ?? __('faculty_full_name') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:image" content="{{ $ogImage ?? asset('storage/Logo_MedSci_th.webp') }}">
+    <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'th_TH' }}">
+    <meta property="og:locale:alternate" content="{{ app()->getLocale() === 'en' ? 'th_TH' : 'en_US' }}">
+
+    {{-- Twitter Cards --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ isset($title) ? $title . ' | ' : '' }}{{ __('faculty_full_name') }}">
+    <meta name="twitter:description" content="{{ $description ?? __('faculty_full_name') }}">
+    <meta name="twitter:image" content="{{ $ogImage ?? asset('storage/Logo_MedSci_th.webp') }}">
+
+    {{-- Schema.org Global Organization & WebSite (AEO & GEO) --}}
+    <x-schema-org />
 
     {{-- Google Fonts --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -60,15 +81,28 @@
     {{-- ── TOPBAR ── --}}
     <div class="bg-navy py-2 text-[13px] text-white/70 hidden md:block">
         <div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center">
-            <span>📍 19 หมู่ 2 ต.แม่กา อ.เมือง จ.พะเยา 56000 &nbsp;|&nbsp; ☎ 054-466-666 ต่อ 3811</span>
+            <span>📍 {{ __('faculty_address') }} &nbsp;|&nbsp; ☎ {{ __('faculty_phone') }}</span>
             <div class="flex items-center gap-3">
                 <a href="https://www.medsci.up.ac.th/v4/index.php" 
                    target="_blank" 
                    rel="noopener"
                    class="bg-white/10 text-white/90 hover:bg-white/20 hover:text-white font-medium px-3 py-0.5 rounded text-xs transition-all flex items-center gap-1.5 border border-white/20">
-                    <span>🌐 ไปยังเว็บไซต์เดิม (V4)</span>
+                    <span>🌐 {{ __('legacy_website') }}</span>
                 </a>
-                <a href="https://www.medsci.up.ac.th/en/" target="_blank" rel="noopener" class="bg-gold text-navy font-semibold px-3 py-0.5 rounded text-xs hover:bg-gold-light transition-colors">EN</a>
+                
+                {{-- Language Switcher (Top Bar) --}}
+                <div class="inline-flex items-center bg-white/10 rounded-lg p-0.5 border border-white/20 text-xs font-semibold">
+                    <a href="{{ route('lang.switch', 'th') }}" 
+                       class="px-2.5 py-0.5 rounded transition-all {{ app()->getLocale() === 'th' ? 'bg-gold text-navy font-bold shadow-xs' : 'text-white/80 hover:text-white' }}" 
+                       title="ภาษาไทย">
+                        🇹🇭 TH
+                    </a>
+                    <a href="{{ route('lang.switch', 'en') }}" 
+                       class="px-2.5 py-0.5 rounded transition-all {{ app()->getLocale() === 'en' ? 'bg-gold text-navy font-bold shadow-xs' : 'text-white/80 hover:text-white' }}" 
+                       title="English">
+                        🇬🇧 EN
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -79,10 +113,15 @@
 
             {{-- Logo --}}
             <a href="{{ route('home') }}" class="flex items-center gap-3 mr-auto no-underline">
-                <img src="{{ asset('storage/Logo_MedSci_th.webp') }}" width="41" height="55" style="height: 55px; width: auto;" class="flex-shrink-0" alt="คณะวิทยาศาสตร์การแพทย์" decoding="async" fetchpriority="high">
+                <img src="{{ asset('storage/Logo_MedSci_th.webp') }}" width="41" height="55" style="height: 55px; width: auto;" class="flex-shrink-0" alt="{{ __('faculty_name') }}" decoding="async" fetchpriority="high">
                 <div class="leading-tight">
-                    <div class="text-[14px] font-semibold text-navy">คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา</div>
-                    <div class="text-[11px] text-muted hidden sm:block">School of Medical Sciences · University of Phayao</div>
+                    @if(app()->getLocale() === 'en')
+                        <div class="text-[14px] font-bold text-navy font-prompt">School of Medical Sciences</div>
+                        <div class="text-[11px] text-muted font-medium">University of Phayao · Thailand</div>
+                    @else
+                        <div class="text-[14px] font-semibold text-navy">คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา</div>
+                        <div class="text-[11px] text-muted hidden sm:block">School of Medical Sciences · University of Phayao</div>
+                    @endif
                 </div>
             </a>
 
@@ -98,7 +137,7 @@
                             {{-- Mega Menu --}}
                             <div class="static" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                                 <a href="{{ $menu->url }}" class="nav-link flex items-center gap-1 cursor-pointer">
-                                    {{ $menu->title_th }} <span class="text-[10px]">▼</span>
+                                    {{ $menu->title }} <span class="text-[10px]">▼</span>
                                 </a>
                                 <div x-show="open" 
                                      x-transition:enter="transition ease-out duration-200"
@@ -113,16 +152,16 @@
                                         <div class="space-y-3">
                                             <div class="font-prompt text-sm font-bold text-navy pb-2 border-b border-border-gray uppercase tracking-wider">
                                                 @if($column->url && $column->url !== '#')
-                                                    <a href="{{ $column->url }}" target="{{ $column->target }}" class="hover:text-teal transition-colors">{{ $column->title_th }}</a>
+                                                    <a href="{{ $column->url }}" target="{{ $column->target }}" class="hover:text-teal transition-colors">{{ $column->title }}</a>
                                                 @else
-                                                    {{ $column->title_th }}
+                                                    {{ $column->title }}
                                                 @endif
                                             </div>
                                             @if($column->children->isNotEmpty())
                                                 <div class="flex flex-col gap-2">
                                                     @foreach($column->children as $link)
                                                         <a href="{{ $link->url }}" target="{{ $link->target }}" class="text-[14px] text-muted hover:text-teal font-medium leading-relaxed transition-colors">
-                                                            {{ $link->title_th }}
+                                                            {{ $link->title }}
                                                         </a>
                                                     @endforeach
                                                 </div>
@@ -136,20 +175,20 @@
                             {{-- Simple Dropdown --}}
                             <div class="relative" x-data="{ open: false }" @click.away="open = false" @mouseenter="open = true" @mouseleave="open = false">
                                 <a href="{{ $menu->url }}" class="nav-link flex items-center gap-1 cursor-pointer">
-                                    {{ $menu->title_th }} <span class="text-[10px]">▼</span>
+                                    {{ $menu->title }} <span class="text-[10px]">▼</span>
                                 </a>
                                 <div x-show="open" 
                                      x-transition
                                      class="absolute top-full left-0 bg-white shadow-xl border border-border-gray rounded-xl py-2 w-64 mt-2 z-50">
                                     @foreach($menu->children as $child)
                                         <a href="{{ $child->url }}" target="{{ $child->target }}" class="block px-4 py-2 text-xs font-medium text-navy/90 hover:bg-off hover:text-teal transition-colors">
-                                            {{ $child->title_th }}
+                                            {{ $child->title }}
                                         </a>
                                         @if($child->children->isNotEmpty())
                                             <div class="pl-6 pb-1 space-y-1">
                                                 @foreach($child->children as $subchild)
                                                     <a href="{{ $subchild->url }}" target="{{ $subchild->target }}" class="block px-3 py-1 text-[11px] text-muted hover:text-teal">
-                                                        - {{ $subchild->title_th }}
+                                                        - {{ $subchild->title }}
                                                     </a>
                                                 @endforeach
                                             </div>
@@ -160,19 +199,33 @@
                         @endif
                     @else
                         <a href="{{ $menu->url }}" target="{{ $menu->target }}" class="nav-link {{ request()->is(ltrim($menu->url, '/')) ? 'nav-link-active' : '' }}">
-                            {{ $menu->title_th }}
+                            {{ $menu->title }}
                         </a>
                     @endif
                 @endforeach
                 <a href="https://reg.up.ac.th" target="_blank"
                    class="ml-2 bg-gold text-navy font-bold px-4 py-2 rounded-lg text-sm hover:bg-gold-light transition-all">
-                    สมัครเรียน →
+                    {{ __('apply_admission') }} →
+                </a>
+            </div>
+
+            {{-- Mobile/Tablet Language Toggle --}}
+            <div class="lg:hidden inline-flex items-center bg-gray-100 rounded-lg p-0.5 border border-gray-200 text-xs font-semibold mr-2">
+                <a href="{{ route('lang.switch', 'th') }}" 
+                   class="px-2 py-0.5 rounded transition-all {{ app()->getLocale() === 'th' ? 'bg-gold text-navy font-bold shadow-xs' : 'text-gray-600 hover:text-navy' }}" 
+                   title="ภาษาไทย">
+                    TH
+                </a>
+                <a href="{{ route('lang.switch', 'en') }}" 
+                   class="px-2 py-0.5 rounded transition-all {{ app()->getLocale() === 'en' ? 'bg-gold text-navy font-bold shadow-xs' : 'text-gray-600 hover:text-navy' }}" 
+                   title="English">
+                    EN
                 </a>
             </div>
 
             {{-- Hamburger --}}
             <button @click="open = !open" class="lg:hidden flex flex-col justify-center gap-[5px] w-10 h-10 p-1.5 rounded-lg hover:bg-off transition-colors"
-                    aria-label="เปิดเมนู" id="hamburger-btn">
+                    aria-label="{{ __('nav_navigation') }}" id="hamburger-btn">
                 <span class="block w-[22px] h-0.5 bg-navy rounded transition-all" :class="open ? 'translate-y-[7px] rotate-45' : ''"></span>
                 <span class="block w-[22px] h-0.5 bg-navy rounded transition-all" :class="open ? 'opacity-0' : ''"></span>
                 <span class="block w-[22px] h-0.5 bg-navy rounded transition-all" :class="open ? '-translate-y-[7px] -rotate-45' : ''"></span>
@@ -185,8 +238,14 @@
             <div class="absolute inset-0 bg-black/50" @click="open = false"></div>
             <div class="absolute top-0 right-0 bottom-0 w-80 bg-white p-6 overflow-y-auto shadow-2xl">
                 <div class="flex justify-between items-center mb-6">
-                    <span class="font-prompt text-navy font-bold">เมนูนำทาง</span>
-                    <button @click="open = false" class="text-muted hover:bg-off rounded-lg p-1 text-xl">✕</button>
+                    <span class="font-prompt text-navy font-bold">{{ __('nav_navigation') }}</span>
+                    <div class="flex items-center gap-2">
+                        <div class="inline-flex items-center bg-gray-100 rounded-lg p-0.5 border border-gray-200 text-xs font-semibold">
+                            <a href="{{ route('lang.switch', 'th') }}" class="px-2 py-0.5 rounded {{ app()->getLocale() === 'th' ? 'bg-gold text-navy font-bold' : 'text-gray-600' }}">TH</a>
+                            <a href="{{ route('lang.switch', 'en') }}" class="px-2 py-0.5 rounded {{ app()->getLocale() === 'en' ? 'bg-gold text-navy font-bold' : 'text-gray-600' }}">EN</a>
+                        </div>
+                        <button @click="open = false" class="text-muted hover:bg-off rounded-lg p-1 text-xl">✕</button>
+                    </div>
                 </div>
                 <div class="flex flex-col gap-2 font-prompt">
                     @foreach($headerMenu as $menu)
@@ -197,7 +256,7 @@
                             
                             <div x-data="{ expanded: false }" class="border-b border-border-gray pb-2">
                                 <button @click="expanded = !expanded" class="flex justify-between items-center w-full px-3 py-2 text-[15px] font-medium text-navy rounded-lg hover:bg-off">
-                                    <span>{{ $menu->title_th }}</span>
+                                    <span>{{ $menu->title }}</span>
                                     <span class="text-xs transition-transform duration-200" :class="expanded ? 'rotate-180' : ''">▼</span>
                                 </button>
                                 
@@ -207,16 +266,16 @@
                                             <div class="py-1">
                                                 <div class="text-[12px] font-bold text-navy/70 px-2 py-1 bg-off rounded-md mb-1">
                                                     @if($column->url && $column->url !== '#')
-                                                        <a href="{{ $column->url }}" target="{{ $column->target }}" class="hover:text-teal">{{ $column->title_th }}</a>
+                                                        <a href="{{ $column->url }}" target="{{ $column->target }}" class="hover:text-teal">{{ $column->title }}</a>
                                                     @else
-                                                        {{ $column->title_th }}
+                                                        {{ $column->title }}
                                                     @endif
                                                 </div>
                                                 @if($column->children->isNotEmpty())
                                                     <div class="pl-2 space-y-1.5">
                                                         @foreach($column->children as $link)
                                                             <a href="{{ $link->url }}" target="{{ $link->target }}" class="block px-2 py-1 text-[13px] text-muted hover:text-teal">
-                                                                - {{ $link->title_th }}
+                                                                - {{ $link->title }}
                                                             </a>
                                                         @endforeach
                                                     </div>
@@ -226,13 +285,13 @@
                                     @else
                                         @foreach($menu->children as $child)
                                             <a href="{{ $child->url }}" target="{{ $child->target }}" class="block px-3 py-1.5 text-[14px] text-muted hover:text-teal">
-                                                {{ $child->title_th }}
+                                                {{ $child->title }}
                                             </a>
                                             @if($child->children->isNotEmpty())
                                                 <div class="pl-4 space-y-1">
                                                     @foreach($child->children as $subchild)
                                                         <a href="{{ $subchild->url }}" target="{{ $subchild->target }}" class="block px-2 py-1 text-[12px] text-muted hover:text-teal">
-                                                            -- {{ $subchild->title_th }}
+                                                            -- {{ $subchild->title }}
                                                         </a>
                                                     @endforeach
                                                 </div>
@@ -243,12 +302,12 @@
                             </div>
                         @else
                             <a href="{{ $menu->url }}" target="{{ $menu->target }}" class="px-3 py-2 text-[15px] font-medium text-navy rounded-lg border-b border-border-gray hover:bg-off hover:text-teal transition-colors">
-                                {{ $menu->title_th }}
+                                {{ $menu->title }}
                             </a>
                         @endif
                     @endforeach
-                    <a href="https://www.medsci.up.ac.th/v4/index.php" target="_blank" rel="noopener" class="mt-4 bg-navy/5 text-navy font-semibold text-center py-2.5 rounded-xl border border-border-gray text-xs flex items-center justify-center gap-1.5 hover:bg-navy/10 transition-colors">🌐 ไปยังเว็บไซต์เดิม (V4)</a>
-                    <a href="https://reg.up.ac.th" target="_blank" class="mt-2 bg-gold text-navy font-bold text-center py-3 rounded-xl shadow-lg shadow-gold/20">สมัครเรียน →</a>
+                    <a href="https://www.medsci.up.ac.th/v4/index.php" target="_blank" rel="noopener" class="mt-4 bg-navy/5 text-navy font-semibold text-center py-2.5 rounded-xl border border-border-gray text-xs flex items-center justify-center gap-1.5 hover:bg-navy/10 transition-colors">🌐 {{ __('legacy_website') }}</a>
+                    <a href="https://reg.up.ac.th" target="_blank" class="mt-2 bg-gold text-navy font-bold text-center py-3 rounded-xl shadow-lg shadow-gold/20">{{ __('apply_admission') }} →</a>
                 </div>
             </div>
         </div>
@@ -269,15 +328,15 @@
                 <div class="bg-white/5 border border-white/10 p-6 rounded-2xl backdrop-blur-sm shadow-lg flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-3.5 mb-4">
-                            <img src="{{ asset('storage/Logo_MedSci_th.webp') }}" width="39" height="52" style="height: 52px; width: auto;" class="flex-shrink-0" alt="คณะวิทยาศาสตร์การแพทย์" loading="lazy" decoding="async">
+                            <img src="{{ asset('storage/Logo_MedSci_th.webp') }}" width="39" height="52" style="height: 52px; width: auto;" class="flex-shrink-0" alt="{{ __('faculty_name') }}" loading="lazy" decoding="async">
                             <div>
-                                <div class="text-base font-bold text-white font-prompt leading-tight">คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา</div>
+                                <div class="text-base font-bold text-white font-prompt leading-tight">{{ __('faculty_full_name') }}</div>
                                 <div class="text-xs text-white/60 font-prompt mt-0.5">School of Medical Sciences · University of Phayao</div>
                             </div>
                         </div>
                         <p class="text-[13px] leading-relaxed text-white/75 font-prompt">
-                            📍 19 หมู่ 2 ต.แม่กา อ.เมือง จ.พะเยา 56000<br>
-                            📞 โทร. 054-466-666 ต่อ 3811-2<br>
+                            📍 {{ __('faculty_address') }}<br>
+                            📞 {{ app()->getLocale() === 'en' ? 'Tel.' : 'โทร.' }} {{ __('faculty_phone') }}<br>
                             ✉️ Email: <a href="mailto:medsci@up.ac.th" class="hover:text-gold transition-colors">medsci@up.ac.th</a>
                         </p>
                     </div>
@@ -297,10 +356,10 @@
                         <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="text-base">📊</span>
-                                <span class="text-xs font-bold text-white font-prompt uppercase tracking-wider">สถิติผู้เข้าชมเว็บไซต์</span>
+                                <span class="text-xs font-bold text-white font-prompt uppercase tracking-wider">{{ app()->getLocale() === 'en' ? 'Visitor Statistics' : 'สถิติผู้เข้าชมเว็บไซต์' }}</span>
                             </div>
                             <span class="flex items-center gap-1.5 text-[10px] text-emerald-400 font-prompt font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> ออนไลน์
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> {{ app()->getLocale() === 'en' ? 'Online' : 'ออนไลน์' }}
                             </span>
                         </div>
 
@@ -308,40 +367,40 @@
                             <!-- Today -->
                             <div class="bg-white/5 border border-white/5 p-3 rounded-xl">
                                 <div class="text-[11px] text-white/60 mb-1 flex items-center gap-1">
-                                    <span>☀️</span> ผู้เข้าชมวันนี้
+                                    <span>☀️</span> {{ app()->getLocale() === 'en' ? 'Today' : 'ผู้เข้าชมวันนี้' }}
                                 </div>
                                 <div class="text-base font-bold text-amber-400 font-mono">
-                                    {{ number_format($visitorToday ?? 124) }} <span class="text-[10px] font-normal text-white/40">คน</span>
+                                    {{ number_format($visitorToday ?? 124) }} <span class="text-[10px] font-normal text-white/40">{{ app()->getLocale() === 'en' ? 'views' : 'คน' }}</span>
                                 </div>
                             </div>
 
                             <!-- Month -->
                             <div class="bg-white/5 border border-white/5 p-3 rounded-xl">
                                 <div class="text-[11px] text-white/60 mb-1 flex items-center gap-1">
-                                    <span>📅</span> เดือนนี้
+                                    <span>📅</span> {{ app()->getLocale() === 'en' ? 'This Month' : 'เดือนนี้' }}
                                 </div>
                                 <div class="text-base font-bold text-sky-400 font-mono">
-                                    {{ number_format($visitorMonth ?? 3450) }} <span class="text-[10px] font-normal text-white/40">คน</span>
+                                    {{ number_format($visitorMonth ?? 3450) }} <span class="text-[10px] font-normal text-white/40">{{ app()->getLocale() === 'en' ? 'views' : 'คน' }}</span>
                                 </div>
                             </div>
 
                             <!-- Year -->
                             <div class="bg-white/5 border border-white/5 p-3 rounded-xl">
                                 <div class="text-[11px] text-white/60 mb-1 flex items-center gap-1">
-                                    <span>🗓️</span> ปีนี้
+                                    <span>🗓️</span> {{ app()->getLocale() === 'en' ? 'This Year' : 'ปีนี้' }}
                                 </div>
                                 <div class="text-base font-bold text-indigo-300 font-mono">
-                                    {{ number_format($visitorYear ?? 38240) }} <span class="text-[10px] font-normal text-white/40">คน</span>
+                                    {{ number_format($visitorYear ?? 38240) }} <span class="text-[10px] font-normal text-white/40">{{ app()->getLocale() === 'en' ? 'views' : 'คน' }}</span>
                                 </div>
                             </div>
 
                             <!-- Total -->
                             <div class="bg-white/5 border border-white/5 p-3 rounded-xl">
                                 <div class="text-[11px] text-white/60 mb-1 flex items-center gap-1">
-                                    <span>👥</span> ผู้เข้าชมทั้งหมด
+                                    <span>👥</span> {{ app()->getLocale() === 'en' ? 'Total Visitors' : 'ผู้เข้าชมทั้งหมด' }}
                                 </div>
                                 <div class="text-base font-bold text-emerald-400 font-mono">
-                                    {{ number_format($visitorTotal ?? 185420) }} <span class="text-[10px] font-normal text-white/40">คน</span>
+                                    {{ number_format($visitorTotal ?? 185420) }} <span class="text-[10px] font-normal text-white/40">{{ app()->getLocale() === 'en' ? 'views' : 'คน' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -351,12 +410,12 @@
             </div>
 
             <div class="border-t border-white/10 pt-5 pb-2 text-center text-xs text-white/40 font-prompt">
-                <span>© {{ date('Y') }} คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา · สงวนลิขสิทธิ์</span>
+                <span>© {{ date('Y') }} {{ __('faculty_full_name') }} · {{ __('all_rights_reserved') }}</span>
                 <span class="mx-1.5">|</span>
                 <button type="button" 
                         @click="window.dispatchEvent(new CustomEvent('open-cookie-settings'))" 
                         class="hover:text-gold transition-colors underline cursor-pointer text-white/50">
-                    🍪 ตั้งค่าคุกกี้
+                    🍪 {{ app()->getLocale() === 'en' ? 'Cookie Settings' : 'ตั้งค่าคุกกี้' }}
                 </button>
             </div>
         </div>

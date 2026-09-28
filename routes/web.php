@@ -6,6 +6,14 @@ use App\Http\Controllers\Public\NewsController;
 use App\Http\Controllers\Public\PageController;
 use App\Http\Controllers\Public\DownloadController;
 
+// ── Language Switcher Route ──
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['th', 'en'], true)) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
 // ── Public Site Routes ──
 Route::get('/', [HomeController::class, 'index'])->name('home');
 

@@ -1,5 +1,67 @@
 <x-public-layout>
-    <x-slot name="title">{{ $program->title_th }} | คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา</x-slot>
+    <x-slot name="title">{{ (app()->getLocale() === 'en' && $program->title_en) ? $program->title_en : $program->title_th }} | {{ __('faculty_name') }}</x-slot>
+    <x-slot name="description">{{ Str::limit(strip_tags($program->overview), 160) }}</x-slot>
+    @if($program->hero_image)
+        <x-slot name="ogImage">{{ asset('storage/' . ltrim(str_replace('/storage/', '', $program->hero_image), '/')) }}</x-slot>
+    @endif
+
+    @push('head')
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Course",
+          "name": {{ json_encode((app()->getLocale() === 'en' && $program->title_en) ? $program->title_en : $program->title_th) }},
+          "description": {{ json_encode(Str::limit(strip_tags($program->overview), 300)) }},
+          "provider": {
+            "@type": "EducationalOrganization",
+            "name": "{{ app()->getLocale() === 'en' ? 'School of Medical Sciences, University of Phayao' : 'คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา' }}",
+            "sameAs": "{{ url('/') }}"
+          },
+          "educationalCredentialAwarded": {{ json_encode((app()->getLocale() === 'en' && $program->degree_full_en) ? $program->degree_full_en : $program->degree_full_th) }},
+          "timeToComplete": "P{{ $program->duration_years }}Y",
+          @if($program->fee_per_semester)
+          "offers": {
+            "@type": "Offer",
+            "price": "{{ $program->fee_per_semester }}",
+            "priceCurrency": "THB",
+            "category": "Tuition per semester"
+          },
+          @endif
+          "hasCourseInstance": {
+            "@type": "CourseInstance",
+            "courseMode": "Full-time",
+            "courseWorkload": "{{ $program->credits }} Credits"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "{{ app()->getLocale() === 'en' ? 'Home' : 'หน้าแรก' }}",
+              "item": "{{ route('home') }}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "{{ __('featured_programs') }}",
+              "item": "{{ route('programs') }}"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": {{ json_encode((app()->getLocale() === 'en' && $program->title_en) ? $program->title_en : $program->title_th) }},
+              "item": "{{ url()->current() }}"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    @endpush
 
     <style>
         .program-content .plo-card {
@@ -28,9 +90,9 @@
             <div class="max-w-[1200px] mx-auto px-6 relative z-10">
                 {{-- Breadcrumb --}}
                 <div class="flex items-center gap-2 text-xs text-white/60 font-semibold uppercase tracking-wider mb-4">
-                    <a href="{{ route('home') }}" class="hover:text-gold transition-colors">หน้าแรก</a>
+                    <a href="{{ route('home') }}" class="hover:text-gold transition-colors">{{ app()->getLocale() === 'en' ? 'Home' : 'หน้าแรก' }}</a>
                     <span>/</span>
-                    <a href="{{ route('programs') }}" class="hover:text-gold transition-colors">หลักสูตรที่เปิดสอน</a>
+                    <a href="{{ route('programs') }}" class="hover:text-gold transition-colors">{{ __('featured_programs') }}</a>
                     <span>/</span>
                     <span class="text-gold">{{ $program->slug }}</span>
                 </div>
@@ -39,11 +101,16 @@
                     <div class="space-y-4">
                         <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-widest">
                             <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse inline-block"></span>
-                            {{ strtoupper($program->slug) }} · วท.บ. {{ $program->duration_years }} ปี
+                            {{ strtoupper($program->slug) }} · {{ app()->getLocale() === 'en' ? 'B.Sc. ' . $program->duration_years . ' Years' : 'วท.บ. ' . $program->duration_years . ' ปี' }}
                         </div>
                         <h1 class="font-prompt text-2.5xl md:text-3.5xl font-extrabold leading-tight text-white">
-                            {{ $program->title_th }}
+                            {{ (app()->getLocale() === 'en' && $program->title_en) ? $program->title_en : $program->title_th }}
                         </h1>
+                        @if(app()->getLocale() === 'en' && $program->title_th)
+                            <div class="text-white/80 font-prompt text-sm">{{ $program->title_th }}</div>
+                        @elseif($program->title_en)
+                            <div class="text-white/80 font-prompt text-sm">{{ $program->title_en }}</div>
+                        @endif
                         <div class="w-16 h-1 bg-gold rounded-full"></div>
                         <p class="text-white/75 font-light text-sm leading-relaxed max-w-lg">
                             {{ Str::limit(strip_tags($program->overview), 180) }}
@@ -52,15 +119,15 @@
                         <div class="flex flex-wrap gap-4 pt-2">
                             <div class="bg-white/10 border border-white/15 rounded-xl px-4 py-2 text-center">
                                 <div class="font-prompt text-lg font-bold text-white">{{ $program->credits }}</div>
-                                <div class="text-[9px] text-white/60 uppercase tracking-wider mt-0.5">หน่วยกิต</div>
+                                <div class="text-[9px] text-white/60 uppercase tracking-wider mt-0.5">{{ app()->getLocale() === 'en' ? 'Credits' : 'หน่วยกิต' }}</div>
                             </div>
                             <div class="bg-white/10 border border-white/15 rounded-xl px-4 py-2 text-center">
-                                <div class="font-prompt text-lg font-bold text-white">{{ $program->duration_years }} ปี</div>
-                                <div class="text-[9px] text-white/60 uppercase tracking-wider mt-0.5">ระยะเวลาเรียน</div>
+                                <div class="font-prompt text-lg font-bold text-white">{{ $program->duration_years }} {{ app()->getLocale() === 'en' ? 'Yrs' : 'ปี' }}</div>
+                                <div class="text-[9px] text-white/60 uppercase tracking-wider mt-0.5">{{ app()->getLocale() === 'en' ? 'Duration' : 'ระยะเวลาเรียน' }}</div>
                             </div>
                             <div class="bg-white/10 border border-white/15 rounded-xl px-4 py-2 text-center">
                                 <div class="font-prompt text-lg font-bold text-white">{{ $program->curriculum_year }}</div>
-                                <div class="text-[9px] text-white/60 uppercase tracking-wider mt-0.5">ปรับปรุง พ.ศ.</div>
+                                <div class="text-[9px] text-white/60 uppercase tracking-wider mt-0.5">{{ app()->getLocale() === 'en' ? 'Curriculum' : 'ปรับปรุง พ.ศ.' }}</div>
                             </div>
                         </div>
                     </div>
@@ -217,34 +284,34 @@
                         <div class="bg-white rounded-2xl border border-border-gray p-6 shadow-sm">
                             <h3 class="font-prompt text-base font-bold text-navy mb-4 border-b border-border-gray pb-3 flex items-center gap-2">
                                 <span class="w-1 h-5 rounded-full inline-block" style="background-color: {{ $program->hero_color_from }};"></span>
-                                ข้อมูลหลักสูตร
+                                {{ app()->getLocale() === 'en' ? 'Program Overview' : 'ข้อมูลหลักสูตร' }}
                             </h3>
                             <div class="space-y-3 text-xs">
                                 <div class="flex justify-between py-2 border-b border-border-gray/50">
-                                    <span class="text-muted">จำนวนหน่วยกิตรวม</span>
-                                    <strong class="text-navy">{{ $program->credits }} หน่วยกิต</strong>
+                                    <span class="text-muted">{{ app()->getLocale() === 'en' ? 'Total Credits' : 'จำนวนหน่วยกิตรวม' }}</span>
+                                    <strong class="text-navy">{{ $program->credits }} {{ app()->getLocale() === 'en' ? 'credits' : 'หน่วยกิต' }}</strong>
                                 </div>
                                 <div class="flex justify-between py-2 border-b border-border-gray/50">
-                                    <span class="text-muted">ระยะเวลาการศึกษา</span>
-                                    <strong class="text-navy">{{ $program->duration_years }} ปี</strong>
+                                    <span class="text-muted">{{ app()->getLocale() === 'en' ? 'Duration' : 'ระยะเวลาการศึกษา' }}</span>
+                                    <strong class="text-navy">{{ $program->duration_years }} {{ app()->getLocale() === 'en' ? 'Years' : 'ปี' }}</strong>
                                 </div>
                                 <div class="flex justify-between py-2 border-b border-border-gray/50">
-                                    <span class="text-muted">ค่าธรรมเนียมการศึกษา</span>
-                                    <strong class="text-navy">{{ number_format($program->fee_per_semester) }} บาท/เทอม</strong>
+                                    <span class="text-muted">{{ app()->getLocale() === 'en' ? 'Tuition Fee' : 'ค่าธรรมเนียมการศึกษา' }}</span>
+                                    <strong class="text-navy">{{ number_format($program->fee_per_semester) }} {{ app()->getLocale() === 'en' ? 'THB / term' : 'บาท/เทอม' }}</strong>
                                 </div>
                                 <div class="flex justify-between py-2 border-b border-border-gray/50">
-                                    <span class="text-muted">ระดับปริญญา</span>
-                                    <strong class="text-navy">ปริญญาตรี</strong>
+                                    <span class="text-muted">{{ app()->getLocale() === 'en' ? 'Degree Level' : 'ระดับปริญญา' }}</span>
+                                    <strong class="text-navy">{{ app()->getLocale() === 'en' ? "Bachelor's Degree" : 'ปริญญาตรี' }}</strong>
                                 </div>
                                 <div class="flex justify-between py-2">
-                                    <span class="text-muted">หลักสูตรปรับปรุง</span>
-                                    <strong class="text-navy">พ.ศ. {{ $program->curriculum_year }}</strong>
+                                    <span class="text-muted">{{ app()->getLocale() === 'en' ? 'Curriculum' : 'หลักสูตรปรับปรุง' }}</span>
+                                    <strong class="text-navy">{{ app()->getLocale() === 'en' ? 'Year ' . $program->curriculum_year : 'พ.ศ. ' . $program->curriculum_year }}</strong>
                                 </div>
                             </div>
                             <a href="https://reg.up.ac.th" target="_blank" rel="noopener"
                                style="background-color: {{ $program->hero_color_from }};"
                                class="mt-5 block text-center text-white text-xs font-bold py-3 rounded-xl transition-all hover:shadow-md hover:brightness-95">
-                                สมัครเรียนหลักสูตรนี้
+                                {{ app()->getLocale() === 'en' ? 'Apply for This Program' : 'สมัครเรียนหลักสูตรนี้' }}
                             </a>
                         </div>
 
@@ -254,12 +321,12 @@
                         @endphp
                         @if($otherPrograms->isNotEmpty())
                         <div class="bg-white rounded-2xl border border-border-gray p-6 shadow-sm">
-                            <h3 class="font-prompt text-base font-bold text-navy mb-4 border-b border-border-gray pb-3">หลักสูตรอื่น ๆ</h3>
+                            <h3 class="font-prompt text-base font-bold text-navy mb-4 border-b border-border-gray pb-3">{{ app()->getLocale() === 'en' ? 'Other Academic Programs' : 'หลักสูตรอื่น ๆ' }}</h3>
                             <div class="space-y-2">
                                 @foreach($otherPrograms as $op)
                                 <a href="{{ route('programs.detail', $op->slug) }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-off transition-colors text-sm font-medium text-navy border border-transparent hover:border-border-gray">
                                     <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: {{ $op->hero_color_from }};"></span>
-                                    {{ $op->title_th }}
+                                    {{ (app()->getLocale() === 'en' && $op->title_en) ? $op->title_en : $op->title_th }}
                                 </a>
                                 @endforeach
                             </div>
@@ -268,10 +335,10 @@
 
                         {{-- Contact Block --}}
                         <div class="text-white rounded-2xl p-6 shadow-sm" style="background-color: {{ $program->hero_color_from }};">
-                            <h3 class="font-prompt text-sm font-bold mb-3">ต้องการข้อมูลเพิ่มเติม?</h3>
-                            <p class="text-xs text-white/80 font-light leading-relaxed mb-4">ติดต่อสอบถามข้อมูลหลักสูตรได้ที่คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา</p>
+                            <h3 class="font-prompt text-sm font-bold mb-3">{{ app()->getLocale() === 'en' ? 'Need More Information?' : 'ต้องการข้อมูลเพิ่มเติม?' }}</h3>
+                            <p class="text-xs text-white/80 font-light leading-relaxed mb-4">{{ app()->getLocale() === 'en' ? 'For admissions and curriculum inquiries, feel free to contact the School of Medical Sciences.' : 'ติดต่อสอบถามข้อมูลหลักสูตรได้ที่คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา' }}</p>
                             <a href="{{ route('contact') }}" class="block text-center bg-white/15 hover:bg-white/25 border border-white/20 text-white text-xs font-bold py-2.5 rounded-xl transition-all">
-                                ติดต่อคณะฯ
+                                {{ app()->getLocale() === 'en' ? 'Contact Faculty' : 'ติดต่อคณะฯ' }}
                             </a>
                         </div>
 

@@ -1,0 +1,47 @@
+# School of Medical Sciences, University of Phayao (คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา)
+
+> The School of Medical Sciences at the University of Phayao (MedSci UP) in Phayao, Thailand, produces high-competency graduates in biomedical sciences, healthcare, nutrition, and laboratory diagnostics, conducting research and innovation for societal well-being.
+
+## Official Information
+- Website: https://www.medsci.up.ac.th/V5/public
+- Parent University: University of Phayao (มหาวิทยาลัยพะเยา) https://www.up.ac.th
+- Address: 19 Moo 2, Tambon Mae Ka, Mueang Phayao District, Phayao 56000, Thailand
+- Telephone: +66 54 466 666 ext. 3811
+- Email: medsci@up.ac.th
+- Geographic Coordinates: 19.0287° N, 99.8967° E
+
+## Undergraduate Programs (หลักสูตรระดับปริญญาตรี)
+All bachelor's programs are 4-year full-time degrees (วท.บ. / B.Sc.):
+
+1. **Bachelor of Science Program in Microbiology (สาขาวิชาจุลชีววิทยา)**
+   - Degree: B.Sc. (Microbiology) / วท.บ. (จุลชีววิทยา)
+   - Credits: 126 - 131 credits
+   - Tuition Fee: 16,000 THB / semester
+   - Overview: Studies structure, genetics, metabolism, and diagnostics of microorganisms (bacteria, fungi, viruses, parasites) for healthcare, biotechnology, and food industries.
+   - URL: https://www.medsci.up.ac.th/V5/public/programs/microbiology
+
+2. **Bachelor of Science Program in Biochemistry and Molecular Biology (สาขาวิชาชีวเคมีและชีววิทยาโมเลกุล)**
+   - Degree: B.Sc. (Biochemistry and Molecular Biology) / วท.บ. (ชีวเคมีและชีววิทยาโมเลกุล)
+   - Credits: 126 credits
+   - Tuition Fee: 16,000 THB / semester
+   - Overview: Focuses on biochemical pathways, genetics, molecular diagnosis, proteomics, and biopharmaceuticals for medical research and clinical laboratories.
+   - URL: https://www.medsci.up.ac.th/V5/public/programs/biochemistry
+
+3. **Bachelor of Science Program in Nutrition and Dietetics (สาขาวิชาโภชนาการและการกำหนดอาหาร)**
+   - Degree: B.Sc. (Nutrition and Dietetics) / วท.บ. (โภชนาการและการกำหนดอาหาร)
+   - Credits: 134 credits
+   - Tuition Fee: 19,000 THB / semester
+   - Overview: Prepares certified clinical dietitians and nutritionists specialized in clinical nutrition therapy, food service systems, community nutrition, and diet planning.
+   - URL: https://www.medsci.up.ac.th/V5/public/programs/nutrition
+
+## Admissions (การรับสมัครเข้าศึกษา)
+- Portal: https://admission.up.ac.th
+- TCAS Round 1: Portfolio (Science projects, competitions, academic excellence)
+- TCAS Round 2: Quota (17 Northern Thailand provinces & special quotas)
+- TCAS Round 3: Admission (National CUPT central selection)
+- TCAS Round 4: Direct Admission
+- Admissions Page: https://www.medsci.up.ac.th/V5/public/admission
+
+## Key Facilities & Research Areas
+- Certified research laboratories in medical microbiology, molecular biology, cell culture, and food analysis.
+- Student financial support: University scholarships, Student Loan Fund (กยศ./กรอ.), and research assistantships.
