@@ -158,8 +158,14 @@
             </div>
         </div>
 
-        <!-- Slider Pagination Dots -->
-        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-30">
+        <!-- Slider Pagination Dots + Pause/Play (WCAG 2.2.2 Pause, Stop, Hide) -->
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-3 z-30">
+            <button type="button" @click="toggle()" x-show="slides.length > 1"
+                    class="w-7 h-7 rounded-full bg-black/30 hover:bg-black/50 text-white text-[11px] flex items-center justify-center border border-white/20 cursor-pointer"
+                    :aria-label="paused ? 'เล่นสไลด์อัตโนมัติ' : 'หยุดสไลด์อัตโนมัติ'"
+                    :title="paused ? 'เล่นสไลด์อัตโนมัติ' : 'หยุดสไลด์อัตโนมัติ'">
+                <span x-text="paused ? '▶' : '❚❚'"></span>
+            </button>
             <template x-for="(slide, index) in slides" :key="index">
                 <button @click="activeSlide = index" 
                         class="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer"
@@ -190,6 +196,16 @@
                 activeSlide: 0,
                 slides: @json($slidesData),
                 timer: null,
+                paused: window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+                start() {
+                    clearInterval(this.timer);
+                    if (this.paused || this.slides.length < 2) return;
+                    this.timer = setInterval(() => { this.next(); }, 8000);
+                },
+                toggle() {
+                    this.paused = !this.paused;
+                    this.paused ? clearInterval(this.timer) : this.start();
+                },
                 next() {
                     this.activeSlide = (this.activeSlide + 1) % this.slides.length;
                 },
@@ -198,11 +214,7 @@
                 },
                 init() {
                     // Delay auto-transition to keep initial Slide 0 solid for instant LCP
-                    setTimeout(() => {
-                        this.timer = setInterval(() => {
-                            this.next();
-                        }, 8000);
-                    }, 5000);
+                    setTimeout(() => { this.start(); }, 5000);
                 }
             };
         }
@@ -238,7 +250,7 @@
 
     {{-- ── SLIDING BANNERS SECTION ── --}}
     @if(isset($banners) && $banners->isNotEmpty())
-    <section class="hidden lg:block bg-gray-50 border-b border-border-gray py-10" x-data="{ activeBanner: 0, totalBanners: {{ $banners->count() }} }" x-init="setTimeout(() => { setInterval(() => { activeBanner = (activeBanner + 1) % totalBanners }, 8000) }, 5000)">
+    <section class="hidden lg:block bg-gray-50 border-b border-border-gray py-10" x-data="{ activeBanner: 0, totalBanners: {{ $banners->count() }}, hold: window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches }" x-init="setTimeout(() => { setInterval(() => { if (!hold) activeBanner = (activeBanner + 1) % totalBanners }, 8000) }, 5000)" @mouseenter="hold = true" @mouseleave="hold = false" @focusin="hold = true" @focusout="hold = false">
         <div class="max-w-[1200px] mx-auto px-6 relative">
             <div style="height: 576px;" class="relative overflow-hidden rounded-2xl shadow-lg bg-[#07162B] group w-full">
                 <!-- Slides Container -->

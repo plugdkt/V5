@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Prompt:wght@300;500;700&display=swap" rel="stylesheet">
 
     {{-- TinyMCE (Optional, can load locally or CDN) --}}
-    <script src="https://cdn.tiny.cloud/1/1onm9k3znnamyh1zaagtfaje32ccjog2v6i41rd776o0i3z2/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/{{ config('services.tinymce.api_key') }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 
     <meta name="csrf-token" content="{{ csrf_token() }}">

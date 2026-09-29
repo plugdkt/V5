@@ -37,6 +37,7 @@
     {{-- Favicon --}}
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}?v=2">
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}?v=2">
+    <link rel="alternate" type="application/rss+xml" title="คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา - ข้อมูลเผยแพร่ล่าสุด" href="{{ route('rss') }}">
 
     {{-- Preload Critical Hero Logo Image --}}
     <link rel="preload" as="image" href="{{ asset('storage/Logo_MedSci_th.webp') }}" type="image/webp">
@@ -48,15 +49,21 @@
     {{-- Livewire Styles --}}
     @livewireStyles
 
-    {{-- Google Tag Manager (Optimized for Instant FCP) --}}
+    {{-- Google Tag Manager: loaded only after the visitor accepts analytics cookies (PDPA, นโยบายคุกกี้) --}}
     <script>
         (function(w,d,s,l,i){
+            var loaded = false;
+            function consented(){ try { return localStorage.getItem('medsci_cookie_consent') === 'all'; } catch (e) { return false; } }
             function loadGTM(){
+                if (loaded || !consented()) return;
+                loaded = true;
                 w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
                 var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
                 j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
                 f.parentNode.insertBefore(j,f);
             }
+            w.medsciLoadGTM = loadGTM;
+            if (!consented()) return;
             if('requestIdleCallback' in window){
                 requestIdleCallback(loadGTM, {timeout: 1500});
             } else if (document.readyState === 'complete') {
@@ -73,16 +80,28 @@
     @stack('styles')
 </head>
 <body class="antialiased">
-    {{-- Google Tag Manager (noscript) --}}
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWF2HSLK"
-        height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe></noscript>
-    {{-- End Google Tag Manager (noscript) --}}
+    {{-- Skip link (WCAG 2.4.1 Bypass Blocks) --}}
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100000] focus:bg-gold focus:text-navy focus:font-bold focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg">
+        {{ app()->getLocale() === 'en' ? 'Skip to main content' : 'ข้ามไปยังเนื้อหาหลัก' }}
+    </a>
 
     {{-- ── TOPBAR ── --}}
     <div class="bg-navy py-2 text-[13px] text-white/70 hidden md:block">
         <div class="max-w-[1200px] mx-auto px-6 flex justify-between items-center">
             <span>📍 {{ __('faculty_address') }} &nbsp;|&nbsp; ☎ {{ __('faculty_phone') }}</span>
             <div class="flex items-center gap-3">
+                <form action="{{ route('search') }}" method="get" role="search" class="flex items-center">
+                    <label for="topbar-search" class="sr-only">{{ app()->getLocale() === 'en' ? 'Search this website' : 'ค้นหาในเว็บไซต์' }}</label>
+                    <input id="topbar-search" type="search" name="q" minlength="2" required
+                           placeholder="{{ app()->getLocale() === 'en' ? 'Search…' : 'ค้นหา…' }}"
+                           class="w-36 focus:w-52 transition-all bg-white/10 border border-white/20 rounded-l-md px-2.5 py-0.5 text-xs text-white placeholder-white/50 focus:outline-none focus:bg-white/20">
+                    <button type="submit" class="bg-white/10 border border-l-0 border-white/20 rounded-r-md px-2 py-0.5 text-xs hover:bg-white/20" aria-label="{{ app()->getLocale() === 'en' ? 'Search' : 'ค้นหา' }}">🔍</button>
+                </form>
+                <div class="inline-flex items-center bg-white/10 rounded-lg p-0.5 border border-white/20 text-xs font-semibold" role="group" aria-label="ปรับขนาดตัวอักษร">
+                    <button type="button" onclick="medsciFont(-1)" class="px-2 py-0.5 rounded text-white/80 hover:text-white" aria-label="ลดขนาดตัวอักษร" title="ลดขนาดตัวอักษร">ก-</button>
+                    <button type="button" onclick="medsciFont(0)" class="px-2 py-0.5 rounded text-white/80 hover:text-white" aria-label="ขนาดตัวอักษรปกติ" title="ขนาดตัวอักษรปกติ">ก</button>
+                    <button type="button" onclick="medsciFont(1)" class="px-2 py-0.5 rounded text-white/80 hover:text-white" aria-label="เพิ่มขนาดตัวอักษร" title="เพิ่มขนาดตัวอักษร">ก+</button>
+                </div>
                 <a href="https://www.medsci.up.ac.th/v4/index.php" 
                    target="_blank" 
                    rel="noopener"
@@ -247,6 +266,20 @@
                         <button @click="open = false" class="text-muted hover:bg-off rounded-lg p-1 text-xl">✕</button>
                     </div>
                 </div>
+                <form action="{{ route('search') }}" method="get" role="search" class="flex mb-4">
+                    <label for="drawer-search" class="sr-only">ค้นหาในเว็บไซต์</label>
+                    <input id="drawer-search" type="search" name="q" minlength="2" required placeholder="ค้นหาในเว็บไซต์…"
+                           class="flex-1 border border-border-gray rounded-l-lg px-3 py-2 text-sm focus:outline-none focus:border-teal">
+                    <button type="submit" class="bg-navy text-white px-3 rounded-r-lg text-sm" aria-label="ค้นหา">🔍</button>
+                </form>
+                <div class="flex items-center justify-between mb-4 text-sm" role="group" aria-label="ปรับขนาดตัวอักษร">
+                    <span class="text-muted">ขนาดตัวอักษร</span>
+                    <span class="inline-flex bg-gray-100 rounded-lg p-0.5 border border-gray-200 font-semibold">
+                        <button type="button" onclick="medsciFont(-1)" class="px-3 py-1 rounded" aria-label="ลดขนาดตัวอักษร">ก-</button>
+                        <button type="button" onclick="medsciFont(0)" class="px-3 py-1 rounded" aria-label="ขนาดตัวอักษรปกติ">ก</button>
+                        <button type="button" onclick="medsciFont(1)" class="px-3 py-1 rounded" aria-label="เพิ่มขนาดตัวอักษร">ก+</button>
+                    </span>
+                </div>
                 <div class="flex flex-col gap-2 font-prompt">
                     @foreach($headerMenu as $menu)
                         @if($menu->children->isNotEmpty())
@@ -315,12 +348,12 @@
     </nav>
 
     {{-- ── MAIN CONTENT ── --}}
-    <main>
+    <main id="main-content" tabindex="-1" data-font-scale class="focus:outline-none">
         {{ $slot }}
     </main>
 
     {{-- ── FOOTER ── --}}
-    <footer class="bg-[#07192E] pt-12 pb-8 text-white/70">
+    <footer class="bg-[#07192E] pt-12 pb-8 text-white/70" data-font-scale>
         <div class="max-w-[1200px] mx-auto px-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 items-stretch">
 
@@ -337,16 +370,19 @@
                         <p class="text-[13px] leading-relaxed text-white/75 font-prompt">
                             📍 {{ __('faculty_address') }}<br>
                             📞 {{ app()->getLocale() === 'en' ? 'Tel.' : 'โทร.' }} {{ __('faculty_phone') }}<br>
-                            ✉️ Email: <a href="mailto:medsci@up.ac.th" class="hover:text-gold transition-colors">medsci@up.ac.th</a>
+                            ✉️ Email: <a href="mailto:medsci@up.ac.th" class="hover:text-gold transition-colors">medsci@up.ac.th</a><br>
+                            🛠️ {{ app()->getLocale() === 'en' ? 'Webmaster' : 'ผู้ดูแลเว็บไซต์' }}: <a href="mailto:wittaya.su@up.ac.th" class="hover:text-gold transition-colors">wittaya.su@up.ac.th</a>
                         </p>
                     </div>
                     <div class="flex gap-2.5 pt-4 border-t border-white/10 mt-4">
-                        <a href="https://facebook.com/MedSciUP" target="_blank" aria-label="Facebook"
+                        <a href="{{ $socialFacebook ?: 'https://facebook.com/MedSciUP' }}" target="_blank" rel="noopener" aria-label="Facebook"
                            class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white/70 text-xs hover:bg-gold hover:text-navy transition-all font-bold">f</a>
-                        <a href="#" aria-label="Instagram"
-                           class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white/70 text-xs hover:bg-gold hover:text-navy transition-all font-bold">ig</a>
-                        <a href="#" aria-label="YouTube"
-                           class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white/70 text-xs hover:bg-gold hover:text-navy transition-all font-bold">yt</a>
+                        @if(!empty($socialYoutube) && rtrim($socialYoutube, '/') !== 'https://www.youtube.com')
+                            <a href="{{ $socialYoutube }}" target="_blank" rel="noopener" aria-label="YouTube"
+                               class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white/70 text-xs hover:bg-gold hover:text-navy transition-all font-bold">yt</a>
+                        @endif
+                        <a href="{{ route('rss') }}" aria-label="RSS Feed" title="RSS ข้อมูลเผยแพร่ล่าสุด"
+                           class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center text-white/70 text-[10px] hover:bg-gold hover:text-navy transition-all font-bold">RSS</a>
                     </div>
                 </div>
 
@@ -409,6 +445,27 @@
 
             </div>
 
+            {{-- Text menu + policies (มาตรฐานเว็บไซต์ภาครัฐ 3.0 ข้อ 8.9) --}}
+            <nav aria-label="{{ app()->getLocale() === 'en' ? 'Footer menu' : 'เมนูส่วนท้าย' }}" class="border-t border-white/10 pt-5 mb-4 text-xs font-prompt">
+                <ul class="flex flex-wrap justify-center gap-x-4 gap-y-2 text-white/60 mb-3">
+                    @foreach($headerMenu as $menu)
+                        @if($menu->url && $menu->url !== '#')
+                            <li><a href="{{ $menu->url }}" target="{{ $menu->target }}" class="hover:text-gold transition-colors">{{ $menu->title }}</a></li>
+                        @endif
+                    @endforeach
+                    <li><a href="{{ route('sitemap.page') }}" class="hover:text-gold transition-colors">{{ app()->getLocale() === 'en' ? 'Sitemap' : 'ผังเว็บไซต์' }}</a></li>
+                    @if(!empty($surveyUrl))
+                        <li><a href="{{ $surveyUrl }}" target="_blank" rel="noopener" class="hover:text-gold transition-colors">{{ app()->getLocale() === 'en' ? 'Satisfaction Survey' : 'แบบประเมินความพึงพอใจ' }}</a></li>
+                    @endif
+                </ul>
+                <ul class="flex flex-wrap justify-center gap-x-4 gap-y-2 text-white/50">
+                    @foreach(\App\Http\Controllers\Public\SiteController::POLICY_PAGES as $slug => $name)
+                        <li><a href="{{ route('pages.show', $slug) }}" class="hover:text-gold transition-colors">{{ $name }}</a></li>
+                    @endforeach
+                    <li><a href="{{ route('pages.show', 'website-policy') }}#disclaimer" class="hover:text-gold transition-colors">{{ app()->getLocale() === 'en' ? 'Disclaimer' : 'ข้อจำกัดความรับผิด' }}</a></li>
+                </ul>
+            </nav>
+
             <div class="border-t border-white/10 pt-5 pb-2 text-center text-xs text-white/40 font-prompt">
                 <span>© {{ date('Y') }} {{ __('faculty_full_name') }} · {{ __('all_rights_reserved') }}</span>
                 <span class="mx-1.5">|</span>
@@ -425,16 +482,19 @@
     <div x-data="{ 
             showConsent: false,
             init() {
-                if (!localStorage.getItem('medsci_cookie_consent')) {
+                let saved = null;
+                try { saved = localStorage.getItem('medsci_cookie_consent'); } catch (e) {}
+                if (!saved) {
                     setTimeout(() => { this.showConsent = true; }, 1000);
                 }
             },
             acceptAll() {
-                localStorage.setItem('medsci_cookie_consent', 'all');
+                try { localStorage.setItem('medsci_cookie_consent', 'all'); } catch (e) {}
                 this.showConsent = false;
+                if (window.medsciLoadGTM) window.medsciLoadGTM();
             },
             acceptEssential() {
-                localStorage.setItem('medsci_cookie_consent', 'essential');
+                try { localStorage.setItem('medsci_cookie_consent', 'essential'); } catch (e) {}
                 this.showConsent = false;
             }
          }"
@@ -461,8 +521,9 @@
                     การใช้งานคุกกี้ (Cookies Notice)
                 </div>
                 <div id="cookie-consent-desc" style="font-family: 'Sarabun', sans-serif; font-size: 0.825rem; color: #E2E8F0; line-height: 1.55; margin-top: 0.3rem;">
-                    เว็บไซต์นี้ใช้คุกกี้เพื่อมอบประสบการณ์การใช้งานที่ดีที่สุด และวิเคราะห์การเข้าชมตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA) ท่านสามารถศึกษารายละเอียดได้ที่ 
-                    <a href="https://citcoms.up.ac.th/PrivacyPolicy" target="_blank" rel="noopener noreferrer" style="color: #C4996C; font-weight: 600; text-decoration: underline;">ประกาศความเป็นส่วนตัว</a>
+                    เว็บไซต์นี้ใช้คุกกี้ที่จำเป็นต่อการทำงานของระบบ และจะใช้คุกกี้เพื่อการวิเคราะห์การเข้าชมเมื่อท่านกด “ยอมรับ” เท่านั้น ตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA) ศึกษารายละเอียดได้ที่
+                    <a href="{{ route('pages.show', 'cookie-policy') }}" style="color: #C4996C; font-weight: 600; text-decoration: underline;">นโยบายคุกกี้</a> และ
+                    <a href="{{ route('pages.show', 'privacy-policy') }}" style="color: #C4996C; font-weight: 600; text-decoration: underline;">นโยบายคุ้มครองข้อมูลส่วนบุคคล</a>
                 </div>
             </div>
         </div>
@@ -490,6 +551,20 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        (function () {
+            var steps = [0.9, 1, 1.1, 1.2, 1.3], key = 'medsci_font_scale', idx = 1;
+            try { var v = parseFloat(localStorage.getItem(key)); if (steps.indexOf(v) >= 0) idx = steps.indexOf(v); } catch (e) {}
+            function apply() { document.querySelectorAll('[data-font-scale]').forEach(function (el) { el.style.zoom = steps[idx]; }); }
+            window.medsciFont = function (d) {
+                idx = d === 0 ? 1 : Math.min(steps.length - 1, Math.max(0, idx + d));
+                try { localStorage.setItem(key, steps[idx]); } catch (e) {}
+                apply();
+            };
+            apply();
+        })();
     </script>
 
     @stack('scripts')

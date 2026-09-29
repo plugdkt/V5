@@ -29,11 +29,11 @@
                 <span>ระบบจองห้องประชุม</span>
                 <span class="text-[10px]" style="color: #94A3B8;">↗</span>
             </a>
-            <a href="https://www.medsci.up.ac.th/v4/index.php/news-announcements" target="_blank" 
+            <a href="https://www.medsci.up.ac.th/msc_news/index.php" target="_blank" 
                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm hover:brightness-110"
                style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); color: #FFFFFF;">
                 <span>📰</span>
-                <span>ระบบข่าวสาร (V4)</span>
+                <span>ระบบข่าวสาร (MSC News)</span>
                 <span class="text-[10px]" style="color: #94A3B8;">↗</span>
             </a>
         </div>

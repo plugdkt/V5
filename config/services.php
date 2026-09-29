@@ -52,4 +52,19 @@ return [
         'mock' => env('SSO_MOCK', false),
     ],
 
+    // Faculty central SSO (MEDSCI ACC)
+    'medsci_sso' => [
+        'login_url'     => env('MEDSCI_SSO_LOGIN_URL', 'https://www.medsci.up.ac.th/msc_acc/sso/login.php'),
+        'logout_url'    => env('MEDSCI_SSO_LOGOUT_URL', 'https://www.medsci.up.ac.th/msc_acc/sso/logout.php'),
+        'verify_url'    => env('MEDSCI_SSO_VERIFY_URL', 'https://www.medsci.up.ac.th/msc_acc/api/verify.php'),
+        'client_id'     => env('MEDSCI_SSO_CLIENT_ID', 'MSC_V5'),
+        'client_secret' => env('MEDSCI_SSO_CLIENT_SECRET'),
+        // keep false only until the server trusts the CA bundle; true is recommended
+        'verify_ssl'    => env('MEDSCI_SSO_VERIFY_SSL', false),
+    ],
+
+    'tinymce' => [
+        'api_key' => env('TINYMCE_API_KEY', 'no-api-key'),
+    ],
+
 ];

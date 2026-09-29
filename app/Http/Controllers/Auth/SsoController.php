@@ -11,10 +11,22 @@ use Exception;
 
 class SsoController extends Controller
 {
-    private $ssoLoginUrl = 'https://www.medsci.up.ac.th/msc_acc/sso/login.php';
-    private $ssoLogoutUrl = 'https://www.medsci.up.ac.th/msc_acc/sso/logout.php';
-    private $clientId = 'MSC_V5';
-    private $clientSecret = 'FyT6EoigYuy0wqvdanYTIMVuGQLTru2k';
+    // Values come from .env (see config/services.php -> medsci_sso). Never commit the client secret.
+    private $ssoLoginUrl;
+    private $ssoLogoutUrl;
+    private $clientId;
+    private $clientSecret;
+    private $verifyApiUrl;
+
+    public function __construct()
+    {
+        $cfg = config('services.medsci_sso');
+        $this->ssoLoginUrl  = $cfg['login_url'];
+        $this->ssoLogoutUrl = $cfg['logout_url'];
+        $this->verifyApiUrl = $cfg['verify_url'];
+        $this->clientId     = $cfg['client_id'];
+        $this->clientSecret = $cfg['client_secret'];
+    }
 
     public function redirect(Request $request)
     {
@@ -39,21 +51,25 @@ class SsoController extends Controller
         $token = trim($request->query('token', ''));
 
         if (empty($token)) {
-            return redirect()->route('home')->with('error', 'เข้าสู่ระบบล้มเหลว: ไม่พบโทเคนยืนยันสิทธิ์');
+            return redirect()->route('home')->with('error', 'เข้าสู่ระบบล้มเหลว: ไม่พบโทเค็นยืนยันสิทธิ์');
         }
 
         // Call central verify API to validate token and retrieve profile
-        $verifyApiUrl = 'https://www.medsci.up.ac.th/msc_acc/api/verify.php';
+        if (empty($this->clientSecret)) {
+            report(new Exception('MEDSCI_SSO_CLIENT_SECRET is not set in .env'));
+            return redirect()->route('home')->with('error', 'ระบบยังไม่ได้ตั้งค่าการเชื่อมต่อ SSO กรุณาติดต่อผู้ดูแลระบบ');
+        }
 
         try {
-            $response = Http::withoutVerifying()->asForm()->post($verifyApiUrl, [
+            $http = config('services.medsci_sso.verify_ssl') ? Http::asForm() : Http::withoutVerifying()->asForm();
+            $response = $http->post($this->verifyApiUrl, [
                 'token' => $token,
                 'client_id' => $this->clientId,
                 'client_secret' => $this->clientSecret,
             ]);
 
             if ($response->failed()) {
-                throw new Exception("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์หลักเพื่อยืนยันโทเคนได้");
+                throw new Exception("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์หลักเพื่อยืนยันโทเค็นได้");
             }
 
             $res = $response->json();

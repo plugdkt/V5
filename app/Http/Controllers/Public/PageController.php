@@ -123,7 +123,14 @@ class PageController extends Controller
 
     public function showDynamicPage($slug)
     {
-        $page = Page::where('slug', $slug)->where('published', true)->firstOrFail();
+        $page = Page::where('slug', $slug)->where('published', true)->first();
+
+        // Built-in policy pages (Government Website Standard v3.0, ข้อ 10) are used
+        // until a CMS page with the same slug is published.
+        if (!$page && array_key_exists($slug, SiteController::POLICY_PAGES)) {
+            return view('public.policies.' . $slug, ['title' => SiteController::POLICY_PAGES[$slug]]);
+        }
+        abort_if(!$page, 404);
         $title = $page->title;
         $content = $page->body;
         return view('public.pages.dynamic', compact('title', 'content', 'page'));

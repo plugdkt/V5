@@ -61,7 +61,12 @@ class SitemapController extends Controller
             ['url' => '/services/car-schedule', 'priority' => '0.7', 'changefreq' => 'daily'],
             ['url' => '/contact', 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['url' => '/contact/corruption-complaint', 'priority' => '0.7', 'changefreq' => 'monthly'],
+            ['url' => '/calendar', 'priority' => '0.6', 'changefreq' => 'weekly'],
+            ['url' => '/sitemap', 'priority' => '0.4', 'changefreq' => 'monthly'],
         ];
+        foreach (array_keys(\App\Http\Controllers\Public\SiteController::POLICY_PAGES) as $policySlug) {
+            $staticPages[] = ['url' => '/pages/' . $policySlug, 'priority' => '0.4', 'changefreq' => 'yearly'];
+        }
 
         foreach ($staticPages as $page) {
             $urls[] = [
@@ -104,8 +109,8 @@ class SitemapController extends Controller
         // 3. Dynamic CMS Pages (pages table)
         try {
             $pages = DB::table('pages')
-                ->where('is_published', true)
-                ->whereNotIn('slug', ['history', 'policies', 'annual-report'])
+                ->where('published', true)
+                ->whereNotIn('slug', array_merge(['history', 'policies', 'annual-report'], array_keys(\App\Http\Controllers\Public\SiteController::POLICY_PAGES)))
                 ->select('slug', 'updated_at')
                 ->get();
 
