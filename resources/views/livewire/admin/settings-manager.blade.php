@@ -48,6 +48,11 @@
                     <label class="form-label">ลิงก์ YouTube Channel</label>
                     <input type="url" wire:model="social_youtube" class="form-input">
                 </div>
+                <div class="md:col-span-2">
+                    <label class="form-label">ลิงก์แบบประเมินความพึงพอใจการใช้งานเว็บไซต์ (เช่น Google Form)</label>
+                    <input type="url" wire:model="survey_url" class="form-input" placeholder="https://forms.gle/...">
+                    <p class="text-[11px] text-muted mt-1">เมื่อกรอกแล้ว ลิงก์จะแสดงที่ส่วนท้ายเว็บไซต์และหน้าผังเว็บไซต์ (มาตรฐานเว็บไซต์ภาครัฐ 3.0 ข้อ 7.3)</p>
+                </div>
             </div>
         </div>
 

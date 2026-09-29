@@ -14,6 +14,7 @@ class SettingsManager extends Component
     public $contact_address;
     public $social_facebook;
     public $social_youtube;
+    public $survey_url;
     
     public $stat_years;
     public $stat_staff;
@@ -31,6 +32,7 @@ class SettingsManager extends Component
         $this->contact_address = Setting::get('contact_address', '19 หมู่ 2 ต.แม่กา อ.เมือง จ.พะเยา 56000');
         $this->social_facebook = Setting::get('social_facebook', 'https://www.facebook.com/medsci.up');
         $this->social_youtube = Setting::get('social_youtube', 'https://www.youtube.com');
+        $this->survey_url = Setting::get('survey_url', '');
         
         $this->stat_years = Setting::get('stat_years', 15);
         $this->stat_staff = Setting::get('stat_staff', 60);
@@ -47,6 +49,8 @@ class SettingsManager extends Component
         Setting::set('contact_address', $this->contact_address, 'string', 'contact');
         Setting::set('social_facebook', $this->social_facebook, 'string', 'contact');
         Setting::set('social_youtube', $this->social_youtube, 'string', 'contact');
+        Setting::set('survey_url', trim((string) $this->survey_url), 'string', 'contact');
+        \Illuminate\Support\Facades\Cache::forget('site_public_settings_v1');
         
         Setting::set('stat_years', (int) $this->stat_years, 'integer', 'stats');
         Setting::set('stat_staff', (int) $this->stat_staff, 'integer', 'stats');

@@ -35,6 +35,13 @@
                     <div class="text-sm text-navy/80 space-y-2 leading-relaxed">
                         <p class="font-semibold text-navy">คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา</p>
                         <p class="font-light">19 หมู่ 2 ตำบลแม่กา อำเภอเมือง จังหวัดพะเยา 56000</p>
+                        <div class="mt-4 p-3 bg-off rounded-xl border border-border-gray/50 text-left">
+                            <span class="block text-[11px] text-muted font-semibold uppercase tracking-wider mb-1">พิกัดที่ตั้ง (GPS)</span>
+                            <p class="text-xs">ละติจูด (Latitude): <strong class="font-mono">19.030318</strong></p>
+                            <p class="text-xs">ลองจิจูด (Longitude): <strong class="font-mono">99.895958</strong></p>
+                            <a href="https://www.google.com/maps?q=19.030318,99.895958" target="_blank" rel="noopener"
+                               class="inline-block mt-1 text-xs font-semibold text-teal hover:underline">เปิดใน Google Maps ↗</a>
+                        </div>
                     </div>
                 </div>
 
@@ -60,6 +67,14 @@
                             <a href="mailto:medsci@up.ac.th" class="font-semibold text-teal hover:underline break-all">
                                 medsci@up.ac.th
                             </a>
+                        </div>
+
+                        <div class="p-3 bg-off rounded-xl border border-border-gray/50 hover:bg-slate-50 transition-colors">
+                            <span class="block text-[11px] text-muted font-semibold uppercase tracking-wider mb-1">ผู้ดูแลเว็บไซต์ (Webmaster)</span>
+                            <a href="mailto:wittaya.su@up.ac.th" class="font-semibold text-teal hover:underline break-all">
+                                wittaya.su@up.ac.th
+                            </a>
+                            <span class="block text-xs text-muted mt-0.5">โทร. 054 466 666 ต่อ 6222</span>
                         </div>
                     </div>
                 </div>
@@ -100,11 +115,11 @@
                     <span class="text-2xl">🗺️</span>
                     <div>
                         <h4 class="font-prompt text-base font-bold text-navy">แผนที่นำทางสถาบัน (Google Maps)</h4>
-                        <p class="text-xs text-muted">ตำแหน่งที่ตั้ง คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะอยา</p>
+                        <p class="text-xs text-muted">ตำแหน่งที่ตั้ง คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา (19.030318, 99.895958)</p>
                     </div>
                 </div>
                 <div class="rounded-2xl overflow-hidden border border-border-gray/50 h-[480px]">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.7594581176586!2d99.8959582!3d19.030318299999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30d9ccb3d334017d%3A0xcee7b0c966584f76!2sSchool%20of%20Medical%20Sciences!5e0!3m2!1sen!2sth!4v1783657101048!5m2!1sen!2sth" 
+                    <iframe title="แผนที่ Google Maps คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยพะเยา" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.7594581176586!2d99.8959582!3d19.030318299999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30d9ccb3d334017d%3A0xcee7b0c966584f76!2sSchool%20of%20Medical%20Sciences!5e0!3m2!1sen!2sth!4v1783657101048!5m2!1sen!2sth" 
                             width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                 </div>
             </div>

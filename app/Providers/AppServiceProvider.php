@@ -31,6 +31,21 @@ class AppServiceProvider extends ServiceProvider
                 ->middleware(['web']);
         });
 
+        // Public links managed in "ตั้งค่าทั่วไป" (social links, satisfaction survey)
+        \Illuminate\Support\Facades\View::composer(['layouts.public', 'public.pages.sitemap'], function ($view) {
+            $view->with(Cache::remember('site_public_settings_v1', 600, function () {
+                try {
+                    return [
+                        'socialFacebook' => \App\Models\Setting::get('social_facebook', 'https://www.facebook.com/MedSciUP'),
+                        'socialYoutube'  => \App\Models\Setting::get('social_youtube', ''),
+                        'surveyUrl'      => \App\Models\Setting::get('survey_url', ''),
+                    ];
+                } catch (\Throwable $e) {
+                    return ['socialFacebook' => 'https://www.facebook.com/MedSciUP', 'socialYoutube' => '', 'surveyUrl' => ''];
+                }
+            }));
+        });
+
         // Share navigation menus & visitor stats with the public layout
         \Illuminate\Support\Facades\View::composer('layouts.public', function ($view) {
             // Track unique visitor per day

@@ -40,9 +40,13 @@ Route::get('/contact/corruption-complaint', [PageController::class, 'corruptionC
 Route::get('/contact/office-schedule', [PageController::class, 'officeSchedule'])->name('contact.office-schedule');
 Route::get('/intranet', [PageController::class, 'intranet'])->name('intranet');
 Route::get('/sitemap.xml', [\App\Http\Controllers\Public\SitemapController::class, 'index'])->name('sitemap');
+// Government Website Standard v3.0: HTML sitemap, site search, RSS
+Route::get('/sitemap', [\App\Http\Controllers\Public\SiteController::class, 'sitemap'])->name('sitemap.page');
+Route::get('/search', [\App\Http\Controllers\Public\SiteController::class, 'search'])->name('search');
+Route::get('/rss.xml', [\App\Http\Controllers\Public\SiteController::class, 'rss'])->name('rss');
 
-// News Articles (Redirected to external system)
-Route::redirect('/news', 'https://www.medsci.up.ac.th/v4/index.php/news-announcements')->name('news.index');
+// News Articles (MSC News system, embedded on the home page)
+Route::redirect('/news', 'https://www.medsci.up.ac.th/msc_news/index.php')->name('news.index');
 
 
 // Personnel Directory

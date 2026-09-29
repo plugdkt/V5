@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@medsci.up.ac.th'],
             [
                 'name' => 'Administrator',
-                'password' => Hash::make('AdminMedSci2026@'),
+                'password' => Hash::make(env('ADMIN_SEED_PASSWORD') ?: \Illuminate\Support\Str::random(32)),
                 'role' => 'super_admin',
                 'active' => true,
                 'employee_id' => '000000',
